@@ -1,41 +1,43 @@
 package com.example.trialproject
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.list_layout_perusahaan.view.*
 
-class CustomAdapterPerusahaan (val perusahaanList: ArrayList<Perusahaan>): RecyclerView.Adapter<CustomAdapterPerusahaan.ViewHolder>() {
+class CustomAdapterPerusahaan (private val context: Context, private val arrayList: ArrayList<Perusahaan>) : RecyclerView.Adapter<CustomAdapterPerusahaan.Holder>() {
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        return Holder(LayoutInflater.from(parent.context).inflate(R.layout.list_layout_perusahaan,parent,false))
+    }
 
-        val pekerjaan: Perusahaan=perusahaanList[position]
-        holder?.textViewNama?.text = pekerjaan.nama_perusahaan
-        holder?.textViewPekerjaan?.text = pekerjaan.pekerjaan
-        holder?.textViewLokasi?.text = pekerjaan.lokasi
-        holder?.textViewGaji?.text = pekerjaan.gaji
+    override fun getItemCount(): Int = arrayList!!.size
+
+    override fun onBindViewHolder(holder: Holder, position: Int) {
+
+        holder.view.textViewPerusahaan.text = arrayList?.get(position)?.nama_perusahaan
+        holder.view.textViewPekerjaan.text = arrayList?.get(position)?.pekerjaan
+        holder.view.textViewLokasi.text = arrayList?.get(position)?.lokasi
+        holder.view.textViewGaji.text = arrayList?.get(position)?.gaji
+
+        holder.view.cvList.setOnClickListener {
+
+            val i = Intent(context,Deskripsi::class.java)
+            i.putExtra("id","1")
+            i.putExtra("nama_perusahaan",arrayList?.get(position)?.nama_perusahaan)
+            i.putExtra("pekerjaan",arrayList?.get(position)?.pekerjaan)
+            i.putExtra("lokasi",arrayList?.get(position)?.lokasi)
+            i.putExtra("gaji",arrayList?.get(position)?.gaji)
+            context.startActivity(i)
+
+        }
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v= LayoutInflater.from(parent?.context).inflate(R.layout.list_layout_perusahaan, parent, false)
-        return  ViewHolder(v)
-
-    }
-
-    override fun getItemCount(): Int {
-
-        return perusahaanList.size
-    }
-
-    class  ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-
-        val textViewNama = itemView.findViewById(R.id.textViewNama) as TextView
-        val textViewPekerjaan = itemView.findViewById(R.id.textViewPekerjaan) as TextView
-        val textViewLokasi = itemView.findViewById(R.id.textViewLokasi) as TextView
-        val textViewGaji = itemView.findViewById(R.id.textViewGaji) as TextView
-
-    }
+    class Holder(val view:View) : RecyclerView.ViewHolder(view)
 
 }

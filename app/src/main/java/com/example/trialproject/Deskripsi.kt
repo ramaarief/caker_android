@@ -1,5 +1,6 @@
 package com.example.trialproject
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,18 +13,30 @@ import org.json.JSONObject
 
 class Deskripsi : AppCompatActivity() {
 
+    lateinit var i: Intent
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deskripsi)
 
-        getPerusahaan()
-        getPekerjaan()
-        getLokasi()
-        getGaji()
-        getDeskripsi()
-        getSyarat()
-        getHp()
-        getWebsite()
+        i = intent
+
+        if(i.hasExtra("id")){
+
+            if(i.getStringExtra("id").equals("1")){
+
+                getPerusahaan()
+                getPekerjaan()
+                getLokasi()
+                getGaji()
+                getDeskripsi()
+                getSyarat()
+                getHp()
+                getWebsite()
+
+            }
+
+        }
     }
 
     fun getPerusahaan(){
