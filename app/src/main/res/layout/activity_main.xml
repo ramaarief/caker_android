@@ -5,27 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:paddingTop="280dp"
     android:gravity="center"
-    android:background="@drawable/splashscreen"
+    android:paddingTop="280dp"
+    android:background="@drawable/home2"
     tools:context=".MainActivity">
 
     <Button
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:text="AYO CARI KERJA"
-        android:textColor="#fff"
+        android:text="@string/home_button"
+        android:textColor="#609b9b"
         android:background="@drawable/rounded_layout"
         android:id="@+id/pindah"/>
-
-    <Button
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="KELUAR"
-        android:textColor="#fff"
-        android:background="@drawable/rounded_exit"
-        android:id="@+id/keluar"/>
-
 
 </LinearLayout>
