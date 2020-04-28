@@ -1,5 +1,5 @@
 package com.example.trialproject
 
 data class Sektor (
-    val nama_sektor: String
+    val id_sektor: String ,val nama_sektor: String
 )
