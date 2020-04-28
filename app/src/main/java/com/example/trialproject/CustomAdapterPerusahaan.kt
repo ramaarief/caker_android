@@ -27,7 +27,7 @@ class CustomAdapterPerusahaan (private val context: Context, private val arrayLi
         holder.view.cvList.setOnClickListener {
 
             val i = Intent(context,Deskripsi::class.java)
-            i.putExtra("id","1")
+            i.putExtra("id",arrayList?.get(position)?.id)
             i.putExtra("nama_perusahaan",arrayList?.get(position)?.nama_perusahaan)
             i.putExtra("pekerjaan",arrayList?.get(position)?.pekerjaan)
             i.putExtra("lokasi",arrayList?.get(position)?.lokasi)

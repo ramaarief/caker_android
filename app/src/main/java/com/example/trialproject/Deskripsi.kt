@@ -4,11 +4,19 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
+import androidx.core.view.get
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import kotlinx.android.synthetic.main.activity_deskripsi.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.list_layout_deskripsi.*
+import kotlinx.android.synthetic.main.list_layout_perusahaan.*
+import kotlinx.android.synthetic.main.list_layout_perusahaan.textViewPerusahaan
 import org.json.JSONObject
 
 class Deskripsi : AppCompatActivity() {
@@ -19,28 +27,53 @@ class Deskripsi : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deskripsi)
 
+        val context = this
+
+        back.setOnClickListener{
+
+            val intent = Intent(context,ListPerusahaanActivity::class.java)
+            startActivity(intent)
+
+        }
+
         i = intent
 
         if(i.hasExtra("id")){
 
             if(i.getStringExtra("id").equals("1")){
-
-                getPerusahaan()
-                getPekerjaan()
-                getLokasi()
-                getGaji()
-                getDeskripsi()
-                getSyarat()
-                getHp()
-                getWebsite()
-
+                getPerusahaan1()
+            }else if(i.getStringExtra("id").equals("2")){
+                getPerusahaan2()
+            }else if(i.getStringExtra("id").equals("3")){
+                getPerusahaan3()
+            }else if(i.getStringExtra("id").equals("4")){
+                getPerusahaan4()
+            }else if(i.getStringExtra("id").equals("5")){
+                getPerusahaan5()
+            }else if(i.getStringExtra("id").equals("6")){
+                getPerusahaan6()
+            }else if(i.getStringExtra("id").equals("7")){
+                getPerusahaan7()
+            }else if(i.getStringExtra("id").equals("8")){
+                getPerusahaan8()
+            }else if(i.getStringExtra("id").equals("9")){
+                getPerusahaan9()
+            }else if(i.getStringExtra("id").equals("10")){
+                getPerusahaan10()
             }
 
         }
+
     }
 
-    fun getPerusahaan(){
-        AndroidNetworking.get("http://192.168.1.3/sektor/perusahaan_json.php")
+    fun getPerusahaan1(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan1)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -48,12 +81,43 @@ class Deskripsi : AppCompatActivity() {
                     Log.e("_kotlinResponse", response.toString())
 
                     val jsonArray = response.getJSONArray("result")
-                    for (i in 0 until jsonArray.length()){
+                    for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
-                        Log.e("_kotlinTitle", jsonObject.optString("nama_perusahaan"))
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
 
-                        textViewPerusahaan.setText(jsonObject.optString("nama_perusahaan"))
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
                     }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
                 }
 
                 override fun onError(anError: ANError) {
@@ -62,8 +126,14 @@ class Deskripsi : AppCompatActivity() {
             })
     }
 
-    fun getPekerjaan(){
-        AndroidNetworking.get("http://192.168.1.3/sektor/perusahaan_json.php")
+    fun getPerusahaan2(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan2)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -71,12 +141,43 @@ class Deskripsi : AppCompatActivity() {
                     Log.e("_kotlinResponse", response.toString())
 
                     val jsonArray = response.getJSONArray("result")
-                    for (i in 0 until jsonArray.length()){
+                    for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
-                        Log.e("_kotlinTitle", jsonObject.optString("pekerjaan"))
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
 
-                        textViewJob.setText(jsonObject.optString("pekerjaan"))
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
                     }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
                 }
 
                 override fun onError(anError: ANError) {
@@ -85,8 +186,14 @@ class Deskripsi : AppCompatActivity() {
             })
     }
 
-    fun getLokasi(){
-        AndroidNetworking.get("http://192.168.1.3/sektor/perusahaan_json.php")
+    fun getPerusahaan3(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan3)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -94,12 +201,43 @@ class Deskripsi : AppCompatActivity() {
                     Log.e("_kotlinResponse", response.toString())
 
                     val jsonArray = response.getJSONArray("result")
-                    for (i in 0 until jsonArray.length()){
+                    for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
-                        Log.e("_kotlinTitle", jsonObject.optString("lokasi"))
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
 
-                        textViewLocation.setText(jsonObject.optString("lokasi"))
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
                     }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
                 }
 
                 override fun onError(anError: ANError) {
@@ -108,8 +246,14 @@ class Deskripsi : AppCompatActivity() {
             })
     }
 
-    fun getGaji(){
-        AndroidNetworking.get("http://192.168.1.3/sektor/perusahaan_json.php")
+    fun getPerusahaan4(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan4)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -117,12 +261,43 @@ class Deskripsi : AppCompatActivity() {
                     Log.e("_kotlinResponse", response.toString())
 
                     val jsonArray = response.getJSONArray("result")
-                    for (i in 0 until jsonArray.length()){
+                    for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
-                        Log.e("_kotlinTitle", jsonObject.optString("gaji"))
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
 
-                        textViewSalary.setText(jsonObject.optString("gaji"))
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
                     }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
                 }
 
                 override fun onError(anError: ANError) {
@@ -131,8 +306,14 @@ class Deskripsi : AppCompatActivity() {
             })
     }
 
-    fun getDeskripsi(){
-        AndroidNetworking.get("http://192.168.1.3/sektor/perusahaan_json.php")
+    fun getPerusahaan5(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan5)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -140,12 +321,43 @@ class Deskripsi : AppCompatActivity() {
                     Log.e("_kotlinResponse", response.toString())
 
                     val jsonArray = response.getJSONArray("result")
-                    for (i in 0 until jsonArray.length()){
+                    for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
-                        Log.e("_kotlinTitle", jsonObject.optString("deskripsi"))
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
 
-                        textViewDeskripsi.setText(jsonObject.optString("deskripsi"))
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
                     }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
                 }
 
                 override fun onError(anError: ANError) {
@@ -154,8 +366,14 @@ class Deskripsi : AppCompatActivity() {
             })
     }
 
-    fun getSyarat(){
-        AndroidNetworking.get("http://192.168.1.3/sektor/perusahaan_json.php")
+    fun getPerusahaan6(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan6)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -163,12 +381,43 @@ class Deskripsi : AppCompatActivity() {
                     Log.e("_kotlinResponse", response.toString())
 
                     val jsonArray = response.getJSONArray("result")
-                    for (i in 0 until jsonArray.length()){
+                    for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
-                        Log.e("_kotlinTitle", jsonObject.optString("syarat"))
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
 
-                        textViewSyarat.setText(jsonObject.optString("syarat"))
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
                     }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
                 }
 
                 override fun onError(anError: ANError) {
@@ -177,8 +426,14 @@ class Deskripsi : AppCompatActivity() {
             })
     }
 
-    fun getHp(){
-        AndroidNetworking.get("http://192.168.1.3/sektor/perusahaan_json.php")
+    fun getPerusahaan7(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan7)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -186,12 +441,43 @@ class Deskripsi : AppCompatActivity() {
                     Log.e("_kotlinResponse", response.toString())
 
                     val jsonArray = response.getJSONArray("result")
-                    for (i in 0 until jsonArray.length()){
+                    for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
-                        Log.e("_kotlinTitle", jsonObject.optString("no_hp"))
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
 
-                        textViewHp.setText(jsonObject.optString("no_hp"))
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
                     }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
                 }
 
                 override fun onError(anError: ANError) {
@@ -200,8 +486,14 @@ class Deskripsi : AppCompatActivity() {
             })
     }
 
-    fun getWebsite(){
-        AndroidNetworking.get("http://192.168.1.3/sektor/perusahaan_json.php")
+    fun getPerusahaan8(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan8)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
@@ -209,12 +501,43 @@ class Deskripsi : AppCompatActivity() {
                     Log.e("_kotlinResponse", response.toString())
 
                     val jsonArray = response.getJSONArray("result")
-                    for (i in 0 until jsonArray.length()){
+                    for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
-                        Log.e("_kotlinTitle", jsonObject.optString("website"))
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
 
-                        textViewWebsite.setText(jsonObject.optString("website"))
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
                     }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
                 }
 
                 override fun onError(anError: ANError) {
@@ -222,4 +545,125 @@ class Deskripsi : AppCompatActivity() {
                 }
             })
     }
+
+    fun getPerusahaan9(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan9)
+            .setPriority(Priority.MEDIUM)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener {
+                override fun onResponse(response: JSONObject) {
+                    Log.e("_kotlinResponse", response.toString())
+
+                    val jsonArray = response.getJSONArray("result")
+                    for (i in 0 until jsonArray.length()) {
+                        val jsonObject = jsonArray.getJSONObject(i)
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
+
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
+                    }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
+                }
+
+                override fun onError(anError: ANError) {
+                    Log.i("_err", anError.toString())
+                }
+            })
+    }
+
+    fun getPerusahaan10(){
+
+        val recyclerView = findViewById(R.id.recyclerViewDeskripsi) as RecyclerView
+        recyclerView.layoutManager= LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        val perusahaanlist=ArrayList<Perusahaan>()
+
+        AndroidNetworking.get(ApiEndPoint.perusahaan10)
+            .setPriority(Priority.MEDIUM)
+            .build()
+            .getAsJSONObject(object : JSONObjectRequestListener {
+                override fun onResponse(response: JSONObject) {
+                    Log.e("_kotlinResponse", response.toString())
+
+                    val jsonArray = response.getJSONArray("result")
+                    for (i in 0 until jsonArray.length()) {
+                        val jsonObject = jsonArray.getJSONObject(i)
+                        Log.e("_kotlinTitle", jsonObject.optString("id"))
+
+                        var isi1=jsonObject.optString("id")
+                        var isi2=jsonObject.optString("nama_perusahaan")
+                        var isi3=jsonObject.optString("nama_sektor")
+                        var isi4=jsonObject.optString("sektor_id")
+                        var isi5=jsonObject.optString("pekerjaan")
+                        var isi6=jsonObject.optString("lokasi")
+                        var isi7=jsonObject.optString("gaji")
+                        var isi8=jsonObject.optString("deskripsi")
+                        var isi9=jsonObject.optString("syarat")
+                        var isi10=jsonObject.optString("no_hp")
+                        var isi11=jsonObject.optString("website")
+
+                        perusahaanlist.add(
+                            Perusahaan(
+                                "$isi1",
+                                "$isi2",
+                                "$isi3",
+                                "$isi4",
+                                "$isi5",
+                                "$isi6",
+                                "$isi7",
+                                "$isi8",
+                                "$isi9",
+                                "$isi10",
+                                "$isi11"
+                            )
+                        )
+                    }
+
+                    val adapter=CustomAdapterDeskripsi(applicationContext,perusahaanlist)
+                    recyclerView.adapter=adapter
+
+
+                }
+
+                override fun onError(anError: ANError) {
+                    Log.i("_err", anError.toString())
+                }
+            })
+    }
+
 }
