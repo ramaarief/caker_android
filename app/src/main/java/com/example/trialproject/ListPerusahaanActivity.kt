@@ -4,19 +4,40 @@ import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.mancj.materialsearchbar.MaterialSearchBar
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_list_perusahaan.*
 import org.json.JSONObject
 
 class ListPerusahaanActivity : AppCompatActivity() {
+
+    internal lateinit var myAPI:SearchAPI
+    internal var compositeDisposable = CompositeDisposable()
+    internal lateinit var layoutManager: LinearLayoutManager
+    internal lateinit var adapter:CustomAdapterPerusahaan
+    internal var suggestList: MutableList<String> = ArrayList()
+
+    override fun onStop() {
+        compositeDisposable.clear()
+        super.onStop()
+    }
+
+    private val api:SearchAPI
+        get() = RetrofitClient.getInstance().create(SearchAPI::class.java)
 
     var arrayList = ArrayList<Perusahaan>()
     lateinit var i: Intent
@@ -27,12 +48,57 @@ class ListPerusahaanActivity : AppCompatActivity() {
 
         val context = this
 
-        supportActionBar?.title = "Data Mahasiswa"
+        back.setOnClickListener{
 
+            val intent = Intent(context,MainActivity::class.java)
+            startActivity(intent)
+
+        }
+
+        //Init API
+        myAPI = api;
+
+        //View
         recyclerViewPerusahaan.setHasFixedSize(true)
-        recyclerViewPerusahaan.layoutManager = LinearLayoutManager(this)
+        layoutManager = LinearLayoutManager(this)
+        recyclerViewPerusahaan.layoutManager = layoutManager
+        recyclerViewPerusahaan.addItemDecoration(DividerItemDecoration(this, layoutManager.orientation))
 
-        val search = findViewById(R.id.search) as SearchView
+        search_bar.setCardViewElevation(15)
+        addSuggestList()
+        search_bar.addTextChangeListener(object:TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val suggest = ArrayList<String>()
+                for(search_term in suggestList)
+                    if(search_term.toLowerCase().contentEquals(search_bar.text.toLowerCase()))
+                        suggest.add(search_term)
+                search_bar.lastSuggestions = suggest
+            }
+
+        })
+        search_bar.setOnSearchActionListener(object:MaterialSearchBar.OnSearchActionListener{
+            override fun onButtonClicked(buttonCode: Int) {
+
+            }
+
+            override fun onSearchStateChanged(enabled: Boolean) {
+                if(!enabled)
+                    getAllPerusahaan()
+            }
+
+            override fun onSearchConfirmed(text: CharSequence?) {
+                startSearch(text.toString())
+            }
+
+        })
 
         val recyclerView2 = findViewById(R.id.recyclerViewSektor) as RecyclerView
         recyclerView2.layoutManager= LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -72,9 +138,41 @@ class ListPerusahaanActivity : AppCompatActivity() {
             })
     }
 
+    private fun startSearch(query:String) {
+        compositeDisposable.addAll(myAPI.searchPerusahaan(query)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ perusahaan ->
+                adapter = CustomAdapterPerusahaan(baseContext, perusahaan)
+                recyclerViewPerusahaan.adapter = adapter
+            },{
+                Toast.makeText(this, "not found", Toast.LENGTH_SHORT).show()
+            }))
+    }
+
+    private fun getAllPerusahaan() {
+        compositeDisposable.addAll(myAPI.perusahaanList
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ perusahaan ->
+                adapter = CustomAdapterPerusahaan(baseContext, perusahaan)
+                recyclerViewPerusahaan.adapter = adapter
+            },{
+                Toast.makeText(this, "not found", Toast.LENGTH_SHORT).show()
+            }))
+    }
+
+    private fun addSuggestList() {
+        suggestList.add("Bank")
+        suggestList.add("Pendidikan")
+        suggestList.add("Teknik")
+
+        search_bar.lastSuggestions = (suggestList)
+    }
+
     override fun onResume() {
         super.onResume()
-        loadAllPerusahaan()
+        getAllPerusahaan()
 
         i = intent
 
@@ -97,68 +195,6 @@ class ListPerusahaanActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-
-    private fun loadAllPerusahaan(){
-
-        val loading = ProgressDialog(this)
-        loading.setMessage("Memuat data...")
-        loading.show()
-
-        AndroidNetworking.get(ApiEndPoint.READ)
-            .setPriority(Priority.MEDIUM)
-            .build()
-            .getAsJSONObject(object : JSONObjectRequestListener{
-
-                override fun onResponse(response: JSONObject?) {
-
-                    arrayList.clear()
-
-                    val jsonArray = response?.optJSONArray("result")
-
-                    if(jsonArray?.length() == 0){
-                        loading.dismiss()
-                        Toast.makeText(applicationContext,"Student data is empty, Add the data first",
-                            Toast.LENGTH_SHORT).show()
-                    }
-
-                    for(i in 0 until jsonArray?.length()!!){
-
-                        val jsonObject = jsonArray?.optJSONObject(i)
-                        arrayList.add(Perusahaan(jsonObject.getString("id"),
-                            jsonObject.getString("nama_perusahaan"),
-                            jsonObject.getString("nama_sektor"),
-                            jsonObject.getString("sektor_id"),
-                            jsonObject.getString("pekerjaan"),
-                            jsonObject.getString("lokasi"),
-                            jsonObject.getString("gaji"),
-                            jsonObject.getString("deskripsi"),
-                            jsonObject.getString("syarat"),
-                            jsonObject.getString("no_hp"),
-                            jsonObject.getString("website")))
-
-                        if(jsonArray?.length() - 1 == i){
-
-                            loading.dismiss()
-                            val adapter = CustomAdapterPerusahaan(applicationContext,arrayList)
-                            adapter.notifyDataSetChanged()
-                            recyclerViewPerusahaan.adapter = adapter
-
-                        }
-
-                    }
-
-                }
-
-                override fun onError(anError: ANError?) {
-                    loading.dismiss()
-                    Log.d("ONERROR",anError?.errorDetail?.toString())
-                    Toast.makeText(applicationContext,"Connection Failure", Toast.LENGTH_SHORT).show()
-                }
-            })
-
-
     }
 
     fun loadAllsektor(){
