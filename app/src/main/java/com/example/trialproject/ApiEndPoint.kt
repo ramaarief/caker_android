@@ -4,7 +4,6 @@ class ApiEndPoint {
     companion object {
 
         private val SERVER = "http://192.168.1.6/sektor2/"
-        val READ = SERVER+"perusahaan_json.php"
 
         val perusahaan1 = SERVER+"perusahaan_1.php"
         val perusahaan2 = SERVER+"perusahaan_2.php"
@@ -16,6 +15,11 @@ class ApiEndPoint {
         val perusahaan8 = SERVER+"perusahaan_8.php"
         val perusahaan9 = SERVER+"perusahaan_9.php"
         val perusahaan10 = SERVER+"perusahaan_10.php"
+        val perusahaan11 = SERVER+"perusahaan_11.php"
+        val perusahaan12 = SERVER+"perusahaan_12.php"
+        val perusahaan13 = SERVER+"perusahaan_13.php"
+        val perusahaan14 = SERVER+"perusahaan_14.php"
+        val perusahaan15 = SERVER+"perusahaan_15.php"
 
         val sektor1 = SERVER+"sektor_1.php"
         val sektor2 = SERVER+"sektor_2.php"
