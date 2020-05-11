@@ -21,6 +21,7 @@ class ApiEndPoint {
         val perusahaan14 = SERVER+"perusahaan_14.php"
         val perusahaan15 = SERVER+"perusahaan_15.php"
 
+        val allSektor = SERVER+"sektor_json.php"
         val sektor1 = SERVER+"sektor_1.php"
         val sektor2 = SERVER+"sektor_2.php"
         val sektor3 = SERVER+"sektor_3.php"
