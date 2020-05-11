@@ -27,6 +27,7 @@ class CustomAdapterPerusahaan (private val context: Context, private val perusah
         holder.view.cvList.setOnClickListener {
 
             val i = Intent(context,Deskripsi::class.java)
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             i.putExtra("id",perusahaanList?.get(position)?.id)
             i.putExtra("nama_perusahaan",perusahaanList?.get(position)?.nama_perusahaan)
             i.putExtra("pekerjaan",perusahaanList?.get(position)?.pekerjaan)

@@ -19,6 +19,7 @@ class CustomAdapterSektor (private val context: Context, private val sektorList:
         holder?.textViewSektor?.text = sektor.nama_sektor
         holder.cvlist.setOnClickListener{
             val i = Intent(context,ListPerusahaanActivity::class.java)
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             i.putExtra("id_sektor",sektorList?.get(position)?.id_sektor)
             i.putExtra("nama_sektor",sektorList?.get(position)?.nama_sektor)
             context.startActivity(i)
