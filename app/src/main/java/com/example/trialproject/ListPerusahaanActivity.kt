@@ -105,7 +105,7 @@ class ListPerusahaanActivity : AppCompatActivity() {
 
         val sektorlist=ArrayList<Sektor>()
 
-        AndroidNetworking.get("http://192.168.1.6/sektor/sektor_json.php")
+        AndroidNetworking.get(ApiEndPoint.allSektor)
             .setPriority(Priority.MEDIUM)
             .build()
             .getAsJSONObject(object : JSONObjectRequestListener {
