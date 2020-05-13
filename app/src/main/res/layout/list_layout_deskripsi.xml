@@ -202,6 +202,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:padding="12dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical"
             android:background="@drawable/border_layout">
 
@@ -222,7 +223,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 
 </LinearLayout>
